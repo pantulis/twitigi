@@ -29,13 +29,24 @@ class MyIndexHandler(webapp.RequestHandler):
                 else:
                         template_values = {
                                 'username': client.get('/account/verify_credentials')['screen_name'],
-                                'twits': client.get('/statuses/friends_timeline', 'GET', (200,), count = 100)
+                                # 'twits': client.get('/statuses/friends_timeline', 'GET', (200,), count = 100)
+                                'twits': self.get_twits_with_url(client)
                                 }
                         view = 'index.html'
 
                 path = os.path.join(os.path.dirname(__file__) + '/templates/' + view )
                 self.response.out.write(template.render(path, template_values))
 
+        def  get_twits_with_url(self, client):
+                my_twits = client.get('/statuses/friends_timeline', 'GET', (200,), count = 1000)
+                the_twits = []
+                url_regex = re.compile(r'''((?:mailto:|ftp://|http://)[^ <>'"{}|\\^`[\]]*)''')
+                for twit in my_twits:
+                        if (re.search("http", twit['text'])):
+                            twit['text'] = url_regex.sub(r'<a href="\1">\1</a>', twit['text'])
+                            the_twits.append(twit)
+                return the_twits
+                        
         def twitter_feeds(self, client):
             the_twits = client.get('/statuses/friends_timeline', 'GET', (200,), count=100)
             res = "<ul>"
