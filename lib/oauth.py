@@ -67,7 +67,7 @@ class OAuthRequestToken(db.Model):
     oauth_token = db.StringProperty()
     oauth_token_secret = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
-
+    
 class OAuthAccessToken(db.Model):
     """OAuth Access Token."""
     service = db.StringProperty()

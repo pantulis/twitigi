@@ -5,14 +5,11 @@ Hola, estás logado en Twitter como <strong>{{ username }}</strong>.  <a href="/
 <hr>
 
 <ul>
-{% for twit in twits %}
-   <!--
-   {{ twit }}
-   -->
+{% for twit in twit_infos %}
    <li>
    <strong>
-   {{  twit.user.screen_name }} 
-   </strong> : {{ twit.text }} 
+   {{  twit.username }} 
+   </strong> : {{ twit.content }} 
    </li>
 {% endfor %}
 </ul>
