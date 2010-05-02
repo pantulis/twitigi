@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from google.appengine.ext import db
 from google.appengine.ext.webapp import RequestHandler, WSGIApplication
@@ -136,7 +137,9 @@ class OAuthClient(object):
         return decode_json(fetch.content)
 
     def login(self):
+        logging.debug("Estoy en login")
         proxy_id = self.get_cookie()
+        logging.debug("self.get_cookie() == %s", proxy_id)
 
         if proxy_id:
             return "FOO%rFF" % proxy_id
@@ -150,7 +153,7 @@ class OAuthClient(object):
     # oauth workflow
 
     def get_request_token(self):
-
+        logging.debug("--> get_request_token()")
         token_info = self.get_data_from_signed_url(
             self.service_info['request_token_url'], **self.request_params
             )
@@ -173,7 +176,7 @@ class OAuthClient(object):
 
     def callback(self, return_to='/'):
         oauth_token = self.handler.request.get("oauth_token")
-
+        logging.debug("oauth_token  =%s", oauth_token)
         if not oauth_token:
             return get_request_token()
 
@@ -181,10 +184,11 @@ class OAuthClient(object):
             'oauth_token =', oauth_token).filter(
             'service =', self.service).fetch(1)[0]
 
+        logging.debug("service_info['acces_token_url'] = %s", self.service_info['access_token_url'])
         token_info = self.get_data_from_signed_url(
             self.service_info['access_token_url'], oauth_token
             )
-
+        logging.debug("token_info = %s", token_info)
         key_name = create_uuid()
 
         self.token = OAuthAccessToken(
@@ -193,10 +197,14 @@ class OAuthClient(object):
 
         if 'specifier_handler' in self.service_info:
             specifier = self.token.specifier = self.service_info['specifier_handler'](self)
-            old = OAuthAccessToken.all().filter(
-                'specifier =', specifier).filter(
-                'service =', self.service)
-            db.delete(old)
+            logging.debug("specifier = %s", specifier)
+
+            # FIXME esto peta
+            #old = OAuthAccessToken.all().filter(
+            #    'specifier =', specifier).filter(
+            #    'service =', self.service)
+            #if old:
+            #    db.delete(old)
 
         self.token.put()
         self.set_cookie(key_name)
@@ -212,6 +220,7 @@ class OAuthClient(object):
 
     # request marshalling
     def get_data_from_signed_url(self, __url, __token=None, __meth='GET', **extra_params):
+
         return urlfetch(self.get_signed_url(
             __url, __token, __meth, **extra_params
             )).content

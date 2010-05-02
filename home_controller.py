@@ -50,6 +50,10 @@ class HomeHandler(webapp.RequestHandler):
                     'email': user.email()
                     }
         else:
+            template_values = {
+                'username': user.nickname(),
+                'email': user.email()
+                }
             view = 'index.html'
 
         path = os.path.join(os.path.dirname(__file__) + '/templates/' + view )

@@ -2,13 +2,12 @@
 
 {% block content %}
 Hola, estás logado en Twitter como <strong>{{ username }}</strong>.  <a href="/oauth/twitter/logout">clic aquí para salir</a>
-<hr>
 
 {% if Environment.is_production %}
-   Estamos en producción!
+   <h5>Entorno: producción</h5>
 {% else %}
-   Estamos en desarrollo!
-{% end %}
+   <h5>Entorno: desarrollo</h5>
+{% endif %}
 
 <ul>
 {% for twit in twit_infos %}

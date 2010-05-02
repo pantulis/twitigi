@@ -12,7 +12,7 @@ class Environment:
 
     @staticmethod
     def twitter_credentials():
-        if Environment.is_development():
+        if Environment.is_production():
             return {
                 'consumer_key': '42mPrPcIeaaNr9cqlFA',
                 'consumer_secret': '17c9BZNkvJ7D300WErI4cexeab304SweRcmzB7b9dJc',
