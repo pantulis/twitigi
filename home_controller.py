@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-
 import logging
 import sys
 import os
 import re
 import string
-
+from environment import Environment
 from os.path import dirname, join as join_path
 sys.path.insert(0, join_path(dirname(__file__), 'lib')) # extend sys.path
 
@@ -48,7 +47,7 @@ class HomeHandler(webapp.RequestHandler):
                 view = 'not_logged.html'
                 template_values = {
                     'username': user.nickname(),
-                    'email':user.email()
+                    'email': user.email()
                     }
         else:
             view = 'index.html'

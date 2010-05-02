@@ -4,6 +4,12 @@
 Hola, estás logado en Twitter como <strong>{{ username }}</strong>.  <a href="/oauth/twitter/logout">clic aquí para salir</a>
 <hr>
 
+{% if Environment.is_production %}
+   Estamos en producción!
+{% else %}
+   Estamos en desarrollo!
+{% end %}
+
 <ul>
 {% for twit in twit_infos %}
    <li>

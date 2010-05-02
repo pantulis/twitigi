@@ -14,6 +14,7 @@ from time import time
 from urllib import urlencode, quote as urlquote
 from uuid import uuid4
 
+from environment import Environment
 # ------------------------------------------------------------------------------
 # configuration -- SET THESE TO SUIT YOUR APP!!
 # ------------------------------------------------------------------------------
@@ -21,20 +22,16 @@ from uuid import uuid4
 OAUTH_APP_SETTINGS = {
 
     'twitter': {
-
-#        'consumer_key': '42mPrPcIeaaNr9cqlFA',
-#        'consumer_secret': '17c9BZNkvJ7D300WErI4cexeab304SweRcmzB7b9dJc',
-        'consumer_key': 'QQN4ne5yAfqqV0BSffgwKA',
+        'consumer_key': Environment.twitter_credentials()['consumer_key'],
+        'consumer_secret': Environment.twitter_credentials()['consumer_secret'],
         'consumer_secret': 'i47YAhBhKi9KrWT8o00MAEeU4jBnAgSrKEpxDDIM8',
         'request_token_url': 'https://twitter.com/oauth/request_token',
         'access_token_url': 'https://twitter.com/oauth/access_token',
         'user_auth_url': 'http://twitter.com/oauth/authorize',
-
         'default_api_prefix': 'http://twitter.com',
         'default_api_suffix': '.json',
-
         }
-}
+    }
 
 # ------------------------------------------------------------------------------
 # utility functions

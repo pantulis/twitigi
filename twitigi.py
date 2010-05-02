@@ -22,16 +22,19 @@ from oauth import OAuthHandler, OAuthClient
 
 from home_controller import HomeHandler
 from update_controller import UpdateHandler
+from environment import Environment
 
-_DEBUG = True
+_DEBUG = Environment.is_development()
 
 def main():
-        logging.getLogger().setLevel(logging.DEBUG)
+        if Environment.is_development():
+                logging.getLogger().setLevel(logging.DEBUG)
+
         application = webapp.WSGIApplication([
                         ('/oauth/(.*)/(.*)', OAuthHandler),
                         ('/update', UpdateHandler),
                         ('/', HomeHandler)
-                        ], debug=True)
+                        ], debug=Environment.is_development())
         
         wsgiref.handlers.CGIHandler().run(application)	
         
