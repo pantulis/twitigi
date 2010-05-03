@@ -27,18 +27,34 @@ class TUser(db.Model):
     def fetch_twits(self):
         logging.debug("user(%s)::fetch_twits", self.user_id)
         client = OAuthClient('twitter',self)
-        client.token = self.access_token
-        the_twits = client.get('/statuses/friends_timeline','GET', (200,),count=200)
-        url_regex = re.compile(r'''((?:mailto:|ftp://|http://)[^ <>'"{}|\\^`[\]]*)''')
-        for twit in the_twits:
-            if (re.search("http", twit['text'])):
-                twit_id = twit['id']
-                twit_text = twit['text']
+        if self.access_token:
+            logging.debug ("TUser::access_token = %s", self.access_token)
+            client.token = self.access_token
+            the_twits = client.get('/statuses/friends_timeline','GET', (200,),count=200)
+            url_regex = re.compile(r'''((?:mailto:|ftp://|http://)[^ <>'"{}|\\^`[\]]*)''')
+            for twit in the_twits:
+                if (re.search("http", twit['text'])):
+                    twit_id = twit['id']
+                    twit_text = twit['text']
+                    twit_url = TUrl.extract_url_from_text(twit['text'])
+                    screen_name = twit['screen_name']
+                    public_name = twit['public_name']
+                    profile_image_url = twit['profile_image_url']
+                    
+                    logging.debug("    --> twitter_id = %s", twit_id)
+                    logging.debug("    --> twitter_text = %s", twit_text)
+                    logging.debug("    --> twit_url = %s", twit_url)
+                    logging.debug("    --> screen_name = %s", screen_name)
+                    logging.debug("    --> public_name = %s", public_name)
+                    logging.debug("    --> profile_image_url = %s", profile_image_url)
 
-                logging.debug("    --> twitter_id = %s", twit_id)
-                logging.debug("    --> twitter_text = %s", twit_text)
-                
+                    #turl = TUrl.get_or_insert(twit_id,
+                    #                          text = twit_text,
+                    #                         url = twit_url,
+                    #                          screen_name = twit['screen_name'],
 
+        else:
+            logging.debug("TUser: access_token is nil!")
 
 
 
